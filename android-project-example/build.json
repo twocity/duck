@@ -1,0 +1,53 @@
+{
+  "android": {
+    "name": "duck_example",
+    "compile_sdk_version": 27,
+    "target_sdk_version": 27,
+    "min_sdk_version": 21,
+    "build_tool_version": "27.0.3",
+    "version_code": 101,
+    "version_name": "1.0.1",
+    "application_id": "me.twocities.example",
+    "manifest": "src/main/AndroidManifest.xml",
+    "src": [
+      "src/main/java/**/*.java"
+    ],
+    "res_dirs": [
+      "src/main/res/"
+    ],
+    "assets_dirs": [
+      "src/main/assets/"
+    ],
+    "signing": {
+      "key_store_file": "debug.keystore",
+      "key_store_password": "android",
+      "key_alias": "AndroidDebugKey",
+      "key_password": "android",
+      "v2": true
+    }
+  },
+  "aar_deps": [
+    "libs/android/*.aar"
+  ],
+  "jar_deps": [
+    "libs/android/*.jar",
+    "libs/*.jar",
+    "libs/processor/gson-2.8.1.jar",
+    "libs/processor/auto-value-1.4.1.jar",
+    "libs/processor/auto-value-gson-annotations-0.7.0.jar"
+  ],
+  "annotation_processing": {
+    "processor_classnames": [
+      "com.google.auto.value.processor.AutoAnnotationProcessor",
+      "com.google.auto.value.processor.AutoValueBuilderProcessor",
+      "com.google.auto.value.processor.AutoValueProcessor",
+      "com.ryanharter.auto.value.gson.AutoValueGsonAdapterFactoryProcessor"
+    ],
+    "jar_deps": [
+      "libs/processor/*.jar"
+    ],
+    "arguments": {
+      "autovaluegson.defaultCollectionsToEmpty": true
+    }
+  }
+}
