@@ -103,73 +103,11 @@ class ResourcesProcessor(private val context: ProjectContext) {
     linkedResources.javaSourceOutput.toFile().copyRecursively(sourceCodeDirectory.toFile())
 
     // remove temp files
-//    tmpDir.deleteRecursively()
+    tmpDir.deleteRecursively()
     return ResourcesOutput(androidManifest = manifest,
         resourcesApk = resourcesApk,
         primaryRTxt = primaryRTxt,
         sourcesDirectory = sourceCodeDirectory)
-  }
-
-  fun processPackage() {
-    val assetsMerger = AssetsMerger(logger, collectAssets())
-    val manifestMerger = ManifestMerger.create(logger, tmpDir) {
-      mainManifest = primaryManifest.toFile()
-      deps = context.manifestDepsProvider.manifests()
-      packageName = androidConfig.applicationId
-      minSdkVersion = androidConfig.minSdkVersion
-      targetSdkVersion = androidConfig.targetSdkVersion
-    }
-    val resourcesMerger = ResourcesMerger(logger = logger,
-        resourcesPaths = collectResources(),
-        workingDir = tmpDir.resolve("res").mkdirs(),
-        minSdkVersion = androidConfig.minSdkVersion)
-    val outputManifest = tmpDir.resolve("manifest/merged.xml")
-    val outputAssetsPath = tmpDir.resolve("assets")
-    val outputResPath = tmpDir.resolve("res/merged")
-
-    // merging
-    val mergedData = MergedAndroidData(
-        mergedResources = resourcesMerger.merge(outputResPath),
-        mergedAssets = assetsMerger.merge(outputAssetsPath),
-        mergedManifest = manifestMerger.merge(outputManifest)
-    )
-
-    // compiling
-    val compiledResOutput = tmpDir.resolve("res/compiled")
-    val compiler = ResourcesCompiler(logger, aapt)
-    val compiledResources = CompiledResources(
-        resources = compiler.compile(mergedData.mergedResources, compiledResOutput),
-        assets = mergedData.mergedAssets,
-        manifest = mergedData.mergedManifest
-    )
-    // linking
-    val linkedDir = tmpDir.resolve("res/link/")
-    linkedDir.clean()
-    val resourceApkOutput = linkedDir.resolve("resources.ap_")
-    val symbolsOutput = linkedDir.resolve("R.txt")
-    val javaSourceOutput = linkedDir.resolve("java")
-    val aaptOptions = AaptLinkOptions.build(aapt) {
-      androidJar = context.androidSdk.frameworkJar
-      resourcesApkOutput = resourceApkOutput
-      // not used
-      javaSourceDir = javaSourceOutput
-      this.symbolsOutput = symbolsOutput
-    }
-    val linker = ResourcesLinker(logger, aaptOptions)
-    linker.link(compiledResources)
-
-    // generate R.java for libraries
-    generateRSources(symbolsOutput, androidConfig.applicationId,
-        collectDependencySymbolTables(), javaSourceOutput)
-
-    val outputDir = buildDir.resolve("output")
-    outputDir.clean()
-    compiledResources.manifest.toFile().copyTo(outputDir.resolve("AndroidManifest.xml").toFile(),
-        true)
-    resourceApkOutput.toFile().copyTo(outputDir.resolve("resources.ap_").toFile())
-    symbolsOutput.toFile().copyTo(outputDir.resolve("R.txt").toFile())
-    javaSourceOutput.toFile().copyRecursively(outputDir.resolve("source/r").toFile())
-    tmpDir.deleteRecursively()
   }
 
   private fun generateRSources(rText: Path, mainPackageName: String,

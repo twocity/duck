@@ -24,8 +24,7 @@ data class Project(
 
   companion object {
     const val BUILD_DIR_NAME = "build"
-    private const val GENERATED_SOURCE = "$BUILD_DIR_NAME/source"
-    const val APT_DIR = "$GENERATED_SOURCE/apt"
+    const val APT_DIR = "source/apt"
     const val JAVAC_OUTPUT = "classes"
     const val RES_OUTPUT = "res"
 
