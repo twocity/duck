@@ -9,6 +9,7 @@ import javax.tools.ToolProvider
 import kotlin.text.Charsets.UTF_8
 
 class JavaCompiler(private val project: Project,
+    private val debug: Boolean,
     private val logger: Logger,
     private val diagnostic: DiagnosticListener<JavaFileObject>,
     private val option: JavaCompileOptions) {
@@ -22,8 +23,10 @@ class JavaCompiler(private val project: Project,
 
     return packageJar().apply {
       logger.info("Java sources compiled -> $this")
-      // remove classes folder
-      option.javacOutputPath.deleteRecursively()
+      if (!debug) {
+        // remove classes folder
+        option.javacOutputPath.deleteRecursively()
+      }
     }
   }
 

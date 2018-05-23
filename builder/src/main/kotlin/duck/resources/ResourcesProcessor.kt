@@ -102,8 +102,10 @@ class ResourcesProcessor(private val context: ProjectContext) {
     linkedResources.symbolsOutput.toFile().copyTo(primaryRTxt.toFile())
     linkedResources.javaSourceOutput.toFile().copyRecursively(sourceCodeDirectory.toFile())
 
-    // remove temp files
-    tmpDir.deleteRecursively()
+    if (!context.debug) {
+      // remove temp files
+      tmpDir.deleteRecursively()
+    }
     return ResourcesOutput(androidManifest = manifest,
         resourcesApk = resourcesApk,
         primaryRTxt = primaryRTxt,

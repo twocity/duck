@@ -58,9 +58,8 @@ compileTestKotlin {
 }
 
 sourceSets {
-  main.java.srcDirs += "src"
-  main.kotlin.srcDirs += "src"
-  test.kotlin.srcDirs += "test"
+  main.java.srcDirs += "src/main/kotlin"
+  main.kotlin.srcDirs += "src/main/kotlin"
 }
 
 shadowJar {

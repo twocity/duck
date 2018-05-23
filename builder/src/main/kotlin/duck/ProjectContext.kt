@@ -5,6 +5,7 @@ import duck.manifest.ManifestDepsProviderImpl
 import java.nio.file.FileSystems
 
 class ProjectContext(val project: Project) {
+  val debug = true
   private val fileSystem = FileSystems.getDefault()!!
   val fileFinder = FileFinderImpl(fileSystem, project.projectDir)
   val logger = LoggerImpl()

@@ -61,7 +61,8 @@ private fun build(context: ProjectContext) {
    */
   context.sourceCodeManager.addSourcePath(resourcesOutput.sourcesDirectory)
   val javaCompileOption = JavaCompileOptionBuilder(context).build()
-  val javaCompiler = JavaCompiler(project, context.logger, SimpleDiagnosticListener(context.logger),
+  val javaCompiler = JavaCompiler(project, context.debug, context.logger,
+      SimpleDiagnosticListener(context.logger),
       javaCompileOption)
   val jar = javaCompiler.compile(context.sourceCodeManager.sources())
 
